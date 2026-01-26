@@ -10,11 +10,30 @@ export function CurrencySelector() {
     <select
       value={currency}
       onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-      className="bg-background border border-card-border rounded-md px-2 py-1 text-xs text-zinc-400 hover:text-foreground hover:border-zinc-500 focus:outline-none focus:border-accent transition-colors cursor-pointer"
       aria-label="Select currency"
+      style={{
+        backgroundColor: '#171717',
+        color: '#ededed',
+        border: '1px solid #22c55e',
+        borderRadius: '6px',
+        padding: '6px 10px',
+        fontSize: '12px',
+        cursor: 'pointer',
+        outline: 'none',
+        WebkitAppearance: 'menulist',
+        MozAppearance: 'menulist',
+        appearance: 'menulist',
+      }}
     >
       {CURRENCIES.map((c) => (
-        <option key={c.code} value={c.code}>
+        <option
+          key={c.code}
+          value={c.code}
+          style={{
+            backgroundColor: '#171717',
+            color: '#ededed',
+          }}
+        >
           {c.label}
         </option>
       ))}

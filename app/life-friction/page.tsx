@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 
 // Types
+type CategoryKey = 'adminDrag' | 'scheduleOverload' | 'environmentFriction' | 'peopleDrain' | 'healthDrag' | 'digitalNoise';
+
 interface FrictionInputs {
   adminDrag: number;
   scheduleOverload: number;
@@ -13,12 +15,21 @@ interface FrictionInputs {
   dailyMinutesLost: number;
 }
 
+interface CategoryBreakdown {
+  key: CategoryKey;
+  label: string;
+  score: number;
+  minutesPerDay: number;
+  minutesPerWeek: number;
+}
+
 interface CalculationResults {
-  frictionScore: number;
-  yearlyHoursLost: number;
-  yearlyDaysLost: number;
-  highestCategory: keyof Omit<FrictionInputs, 'dailyMinutesLost'>;
+  categoryBreakdowns: CategoryBreakdown[];
+  highestCategory: CategoryKey;
   highestCategoryLabel: string;
+  leverageCategory: CategoryKey;
+  leverageCategoryLabel: string;
+  nextMove: string;
 }
 
 interface StoredData {
@@ -39,79 +50,96 @@ const DEFAULT_INPUTS: FrictionInputs = {
 };
 
 const FRICTION_CATEGORIES: {
-  key: keyof Omit<FrictionInputs, 'dailyMinutesLost'>;
+  key: CategoryKey;
   label: string;
-  insight: string;
 }[] = [
-  {
-    key: 'adminDrag',
-    label: 'Admin drag',
-    insight: 'The small tasks keep piling up, each one feeling heavier than it should.',
-  },
-  {
-    key: 'scheduleOverload',
-    label: 'Schedule overload',
-    insight: 'There is always somewhere to be, and rarely time to just be.',
-  },
-  {
-    key: 'environmentFriction',
-    label: 'Environment friction',
-    insight: 'The space around you is asking for something you have not had time to give.',
-  },
-  {
-    key: 'peopleDrain',
-    label: 'People drain',
-    insight: 'Some relationships take more than they return, and you feel the difference.',
-  },
-  {
-    key: 'healthDrag',
-    label: 'Health drag',
-    insight: 'Your body has been keeping score of what you have been putting off.',
-  },
-  {
-    key: 'digitalNoise',
-    label: 'Digital noise',
-    insight: 'The notifications never stop, and neither does the low hum of being always reachable.',
-  },
+  { key: 'adminDrag', label: 'Admin drag' },
+  { key: 'scheduleOverload', label: 'Schedule overload' },
+  { key: 'environmentFriction', label: 'Environment friction' },
+  { key: 'peopleDrain', label: 'People drain' },
+  { key: 'healthDrag', label: 'Health drag' },
+  { key: 'digitalNoise', label: 'Digital noise' },
 ];
+
+// Categories that are more actionable (preferred for leverage)
+const ACTIONABLE_CATEGORIES: CategoryKey[] = [
+  'adminDrag',
+  'scheduleOverload',
+  'environmentFriction',
+  'digitalNoise',
+];
+
+// Next move suggestions by category - calm, grounded, no exclamation marks
+const NEXT_MOVES: Record<CategoryKey, string> = {
+  adminDrag: 'Pick one recurring task that drains you and see if it can be automated, batched, or let go.',
+  scheduleOverload: 'Look at this week and find one commitment you can decline, delay, or shorten.',
+  environmentFriction: 'Identify one thing in your space that bothers you daily and spend ten minutes on it.',
+  peopleDrain: 'Notice which interactions leave you emptier and consider what boundary would help.',
+  healthDrag: 'Choose the smallest health-related thing you have been putting off and do just that.',
+  digitalNoise: 'Turn off notifications for one app that interrupts you most often.',
+};
 
 // Pure calculation function
 function calculateResults(inputs: FrictionInputs): CalculationResults {
-  const frictionValues = [
-    inputs.adminDrag,
-    inputs.scheduleOverload,
-    inputs.environmentFriction,
-    inputs.peopleDrain,
-    inputs.healthDrag,
-    inputs.digitalNoise,
-  ];
+  const categories = FRICTION_CATEGORIES.map(({ key, label }) => ({
+    key,
+    label,
+    score: inputs[key],
+  }));
 
-  const frictionScore = frictionValues.reduce((a, b) => a + b, 0) / frictionValues.length;
-  const yearlyHoursLost = (inputs.dailyMinutesLost * 365) / 60;
-  const yearlyDaysLost = yearlyHoursLost / 24;
+  // Calculate total score for proportional allocation
+  const totalScore = categories.reduce((sum, c) => sum + c.score, 0);
+
+  // Allocate daily minutes proportionally across categories
+  const categoryBreakdowns: CategoryBreakdown[] = categories.map(({ key, label, score }) => {
+    const proportion = totalScore > 0 ? score / totalScore : 0;
+    const minutesPerDay = inputs.dailyMinutesLost * proportion;
+    return {
+      key,
+      label,
+      score,
+      minutesPerDay,
+      minutesPerWeek: minutesPerDay * 7,
+    };
+  });
 
   // Find highest friction category
-  const categoryValues: { key: keyof Omit<FrictionInputs, 'dailyMinutesLost'>; value: number }[] = [
-    { key: 'adminDrag', value: inputs.adminDrag },
-    { key: 'scheduleOverload', value: inputs.scheduleOverload },
-    { key: 'environmentFriction', value: inputs.environmentFriction },
-    { key: 'peopleDrain', value: inputs.peopleDrain },
-    { key: 'healthDrag', value: inputs.healthDrag },
-    { key: 'digitalNoise', value: inputs.digitalNoise },
-  ];
-
-  const highest = categoryValues.reduce((max, curr) =>
-    curr.value > max.value ? curr : max
+  const highest = categoryBreakdowns.reduce((max, curr) =>
+    curr.score > max.score ? curr : max
   );
 
-  const highestCategoryLabel = FRICTION_CATEGORIES.find(c => c.key === highest.key)?.label ?? '';
+  // Find best leverage category
+  // Prefer actionable categories, only choose people/health if clearly dominant
+  const actionableBreakdowns = categoryBreakdowns.filter(c =>
+    ACTIONABLE_CATEGORIES.includes(c.key)
+  );
+  const nonActionableBreakdowns = categoryBreakdowns.filter(c =>
+    !ACTIONABLE_CATEGORIES.includes(c.key)
+  );
+
+  const highestActionable = actionableBreakdowns.reduce((max, curr) =>
+    curr.score > max.score ? curr : max
+  , { key: 'adminDrag' as CategoryKey, label: '', score: 0, minutesPerDay: 0, minutesPerWeek: 0 });
+
+  const highestNonActionable = nonActionableBreakdowns.reduce((max, curr) =>
+    curr.score > max.score ? curr : max
+  , { key: 'peopleDrain' as CategoryKey, label: '', score: 0, minutesPerDay: 0, minutesPerWeek: 0 });
+
+  // Only choose non-actionable if it's clearly dominant (at least 3 points higher)
+  let leverage: CategoryBreakdown;
+  if (highestNonActionable.score >= highestActionable.score + 3) {
+    leverage = highestNonActionable;
+  } else {
+    leverage = highestActionable;
+  }
 
   return {
-    frictionScore,
-    yearlyHoursLost,
-    yearlyDaysLost,
+    categoryBreakdowns,
     highestCategory: highest.key,
-    highestCategoryLabel,
+    highestCategoryLabel: highest.label,
+    leverageCategory: leverage.key,
+    leverageCategoryLabel: leverage.label,
+    nextMove: NEXT_MOVES[leverage.key],
   };
 }
 
@@ -193,11 +221,6 @@ export default function LifeFriction() {
   // Calculate results
   const results = useMemo(() => calculateResults(inputs), [inputs]);
 
-  // Get insight for highest category
-  const insight = useMemo(() => {
-    return FRICTION_CATEGORIES.find(c => c.key === results.highestCategory)?.insight ?? '';
-  }, [results.highestCategory]);
-
   // Save to localStorage when inputs change
   useEffect(() => {
     if (isClient) {
@@ -222,11 +245,6 @@ export default function LifeFriction() {
   const handleReset = useCallback(() => {
     setInputs(DEFAULT_INPUTS);
   }, []);
-
-  // Format numbers for display
-  const formatScore = (value: number): string => value.toFixed(1);
-  const formatHours = (value: number): string => Math.round(value).toLocaleString();
-  const formatDays = (value: number): string => value.toFixed(1);
 
   return (
     <div className="px-6 py-12 md:py-16">
@@ -278,36 +296,43 @@ export default function LifeFriction() {
 
         {/* Results */}
         <div className="bg-card-bg border border-card-border rounded-xl p-6 mb-6">
-          <p className="text-sm text-zinc-500 mb-4">This is what constant friction costs.</p>
+          <h2 className="text-lg font-semibold mb-4 text-zinc-200">Estimated minutes lost per day</h2>
+          <p className="text-sm text-zinc-500 mb-4">
+            Based on your {inputs.dailyMinutesLost} minutes, allocated by friction scores.
+          </p>
 
-          <div className="space-y-4 mb-6">
-            <div className="flex justify-between items-baseline">
-              <span className="text-zinc-400">Friction score</span>
-              <span className="text-2xl font-semibold text-foreground">
-                {formatScore(results.frictionScore)} <span className="text-base text-zinc-500">/ 10</span>
-              </span>
-            </div>
-
-            <div className="flex justify-between items-baseline">
-              <span className="text-zinc-400">Hours lost per year</span>
-              <span className="text-2xl font-semibold text-foreground">
-                {formatHours(results.yearlyHoursLost)}
-              </span>
-            </div>
-
-            <div className="flex justify-between items-baseline">
-              <span className="text-zinc-400">Equivalent days lost</span>
-              <span className="text-2xl font-semibold text-foreground">
-                {formatDays(results.yearlyDaysLost)}
-              </span>
-            </div>
+          {/* Category breakdown */}
+          <div className="space-y-3 mb-6">
+            {results.categoryBreakdowns.map((category) => (
+              <div key={category.key} className="flex justify-between items-baseline">
+                <span className="text-zinc-400">{category.label}</span>
+                <span className="text-foreground">
+                  <span className="font-medium">{Math.round(category.minutesPerDay)}</span>
+                  <span className="text-zinc-500 text-sm"> min/day</span>
+                  <span className="text-zinc-600 text-sm ml-2">({Math.round(category.minutesPerWeek)} min/week)</span>
+                </span>
+              </div>
+            ))}
           </div>
 
-          <div className="border-t border-card-border pt-4">
-            <p className="text-zinc-400 mb-2">
-              Your biggest source of friction right now is: <span className="text-foreground font-medium">{results.highestCategoryLabel}</span>
+          {/* Highest friction */}
+          <div className="border-t border-card-border pt-4 mb-4">
+            <p className="text-zinc-400">
+              Highest friction: <span className="text-foreground font-medium">{results.highestCategoryLabel}</span>
             </p>
-            <p className="text-sm text-zinc-500 italic">{insight}</p>
+          </div>
+
+          {/* Best leverage */}
+          <div className="border-t border-card-border pt-4 mb-4">
+            <p className="text-zinc-400">
+              Best leverage: <span className="text-accent font-medium">{results.leverageCategoryLabel}</span>
+            </p>
+          </div>
+
+          {/* Next move */}
+          <div className="border-t border-card-border pt-4">
+            <p className="text-sm text-zinc-500 mb-2">Next move</p>
+            <p className="text-zinc-300">{results.nextMove}</p>
           </div>
         </div>
 

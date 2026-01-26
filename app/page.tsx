@@ -60,6 +60,9 @@ export default function Home() {
               It doesn't tell you what to do.<br />
               It just shows the number.
             </p>
+            <span className="inline-block mt-6 px-4 py-2 bg-accent text-zinc-900 font-medium rounded-lg hover:bg-accent/90 transition-colors">
+              Open Calculator →
+            </span>
           </Link>
         </section>
 
@@ -81,6 +84,9 @@ export default function Home() {
             <p className="text-zinc-500 text-sm">
               It's for the moments when something sounds small, but never quite is.
             </p>
+            <span className="inline-block mt-6 px-4 py-2 bg-accent text-zinc-900 font-medium rounded-lg hover:bg-accent/90 transition-colors">
+              Open Calculator →
+            </span>
           </Link>
         </section>
 
@@ -107,6 +113,9 @@ export default function Home() {
             <p className="text-zinc-500 text-sm">
               Sometimes knowing where the drag is changes how heavy everything feels.
             </p>
+            <span className="inline-block mt-6 px-4 py-2 bg-accent text-zinc-900 font-medium rounded-lg hover:bg-accent/90 transition-colors">
+              Open Calculator →
+            </span>
           </Link>
         </section>
 
