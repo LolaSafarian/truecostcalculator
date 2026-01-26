@@ -3,10 +3,10 @@
 export type CurrencyCode = 'AUD' | 'USD' | 'EUR' | 'GBP';
 
 export const CURRENCIES: { code: CurrencyCode; label: string; locale: string }[] = [
-  { code: 'AUD', label: 'AUD', locale: 'en-AU' },
-  { code: 'USD', label: 'USD', locale: 'en-US' },
-  { code: 'EUR', label: 'EUR', locale: 'de-DE' },
-  { code: 'GBP', label: 'GBP', locale: 'en-GB' },
+  { code: 'AUD', label: 'AUD (A$)', locale: 'en-AU' },
+  { code: 'USD', label: 'USD ($)', locale: 'en-US' },
+  { code: 'EUR', label: 'EUR (€)', locale: 'de-DE' },
+  { code: 'GBP', label: 'GBP (£)', locale: 'en-GB' },
 ];
 
 export const DEFAULT_CURRENCY: CurrencyCode = 'AUD';
