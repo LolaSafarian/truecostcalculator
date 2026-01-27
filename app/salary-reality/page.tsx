@@ -232,11 +232,10 @@ export default function SalaryReality() {
   }, []);
 
   const handleReset = useCallback(() => {
-    if (!savedAsDefault) {
-      setInputs(DEFAULT_INPUTS);
-    }
-    // If savedAsDefault is true, we keep current values (they are already the "default")
-  }, [savedAsDefault]);
+    setInputs(DEFAULT_INPUTS);
+    setSavedAsDefault(false);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  }, []);
 
   const handleSaveAsDefaultToggle = useCallback(() => {
     setSavedAsDefault(prev => !prev);

@@ -245,6 +245,7 @@ export default function LifeFriction() {
 
   const handleReset = useCallback(() => {
     setInputs(DEFAULT_INPUTS);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
   }, []);
 
   return (
