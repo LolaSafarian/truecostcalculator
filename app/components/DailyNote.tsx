@@ -13,6 +13,6 @@ export default function DailyNote({ calculatorId }: { calculatorId: number }) {
   if (!note) return null;
 
   return (
-    <p className="text-xs text-zinc-600 mt-4">{note}</p>
+    <p className="text-sm text-zinc-300 mt-4">{note}</p>
   );
 }
