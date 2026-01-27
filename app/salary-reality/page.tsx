@@ -599,7 +599,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
               </button>
             </div>
 
-            <DailyNote calculatorId={0} />
+            <DailyNote calculatorId={1} />
           </div>
         </div>
       </div>

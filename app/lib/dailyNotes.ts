@@ -110,6 +110,6 @@ export function getDailyNote(calculatorId: number): string {
   const diff = sydneyDate.getTime() - startOfYear.getTime();
   const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-  const notes = allNotes[calculatorId] ?? salaryNotes;
+  const notes = allNotes[calculatorId - 1] ?? salaryNotes;
   return notes[(dayOfYear + calculatorId) % notes.length];
 }

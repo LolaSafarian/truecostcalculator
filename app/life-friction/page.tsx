@@ -336,7 +336,7 @@ export default function LifeFriction() {
             <p className="text-zinc-300">{results.nextMove}</p>
           </div>
 
-          <DailyNote calculatorId={2} />
+          <DailyNote calculatorId={3} />
         </div>
 
         {/* Reset Button */}

@@ -735,7 +735,7 @@ export default function TimeCost() {
                 </div>
               )}
 
-              <DailyNote calculatorId={1} />
+              <DailyNote calculatorId={2} />
             </div>
 
             {/* Actions */}
