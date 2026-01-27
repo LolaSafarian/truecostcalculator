@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useCurrency } from '../components/CurrencyProvider';
+import DailyNote from '../components/DailyNote';
 
 // Types
 interface SalaryInputs {
@@ -597,6 +598,8 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                 {copied ? 'Copied!' : 'Copy Summary'}
               </button>
             </div>
+
+            <DailyNote calculatorId={0} />
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
+import DailyNote from '../components/DailyNote';
 
 // Types
 type CategoryKey = 'adminDrag' | 'scheduleOverload' | 'environmentFriction' | 'peopleDrain' | 'healthDrag' | 'digitalNoise';
@@ -334,6 +335,8 @@ export default function LifeFriction() {
             <p className="text-sm text-zinc-500 mb-2">Next move</p>
             <p className="text-zinc-300">{results.nextMove}</p>
           </div>
+
+          <DailyNote calculatorId={2} />
         </div>
 
         {/* Reset Button */}

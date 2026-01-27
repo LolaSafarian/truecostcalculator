@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useCurrency } from '../components/CurrencyProvider';
+import DailyNote from '../components/DailyNote';
 
 // Types
 type Frequency = 'once' | 'weekly' | 'fortnightly' | 'monthly';
@@ -730,6 +731,8 @@ export default function TimeCost() {
                   </p>
                 </div>
               )}
+
+              <DailyNote calculatorId={1} />
             </div>
 
             {/* Actions */}
