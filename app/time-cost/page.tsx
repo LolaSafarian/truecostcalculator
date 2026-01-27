@@ -6,7 +6,7 @@ import DailyNote from '../components/DailyNote';
 
 // Types
 type Frequency = 'once' | 'weekly' | 'fortnightly' | 'monthly';
-type Duration = '4weeks' | '8weeks' | '12weeks' | '6months' | 'ongoing';
+type Duration = '2weeks' | '4weeks' | '8weeks' | '12weeks' | '6months' | 'ongoing';
 type EnergyLevel = 'light' | 'medium' | 'heavy';
 type TimeUnit = 'minutes' | 'hours' | 'days';
 
@@ -80,6 +80,7 @@ const FREQUENCY_OPTIONS: { value: Frequency; label: string }[] = [
 ];
 
 const DURATION_OPTIONS: { value: Duration; label: string }[] = [
+  { value: '2weeks', label: '2 weeks' },
   { value: '4weeks', label: '4 weeks' },
   { value: '8weeks', label: '8 weeks' },
   { value: '12weeks', label: '12 weeks' },
@@ -276,6 +277,7 @@ function useIsClient() {
 // Duration multiplier helper
 function getDurationMultiplier(duration: Duration): number {
   switch (duration) {
+    case '2weeks': return 0.5;
     case '4weeks': return 1;
     case '8weeks': return 2;
     case '12weeks': return 3;
@@ -286,6 +288,7 @@ function getDurationMultiplier(duration: Duration): number {
 
 function getDurationLabel(duration: Duration): string {
   switch (duration) {
+    case '2weeks': return '2 weeks';
     case '4weeks': return '4 weeks';
     case '8weeks': return '8 weeks';
     case '12weeks': return '12 weeks';
