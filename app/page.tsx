@@ -76,7 +76,7 @@ export default function Home() {
               Time Cost
             </h3>
             <p className="text-zinc-400 mb-4">
-              Every yes has a shape.
+              Every "yes" comes with a hidden cost.
             </p>
             <p className="text-zinc-400 mb-4">
               Time Cost helps you see what a commitment actually takes once you include preparation, follow-ups, and the energy it draws afterward.
@@ -100,7 +100,7 @@ export default function Home() {
               Life Friction
             </h3>
             <p className="text-zinc-400 mb-4">
-              Not everything wrong feels dramatic.
+              Not everything that causes friction feels dramatic.
             </p>
             <p className="text-zinc-400 mb-4">
               Life Friction helps you identify the small, constant resistance that quietly drains your energy each day.
@@ -123,14 +123,11 @@ export default function Home() {
         <section className="mb-16">
           <p className="text-zinc-400 mb-4">
             True Cost is not a productivity tool.<br />
-            It's not a wellness program.<br />
-            It doesn't promise improvement.
-          </p>
-          <p className="text-zinc-400 mb-4">
+            It doesn't promise improvement.<br />
             It offers clarity.
           </p>
           <p className="text-zinc-400">
-            And sometimes, that's enough to decide what matters next.
+            And sometimes, that's enough to help you decide what must change for you.
           </p>
         </section>
 
