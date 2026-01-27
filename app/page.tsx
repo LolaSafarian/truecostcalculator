@@ -139,6 +139,7 @@ export default function Home() {
           <p className="text-sm text-zinc-600">
             Awareness doesn't fix everything. But it often shows where to start.
           </p>
+          <p className="text-sm text-zinc-600">DEPLOY CHECK</p>
         </footer>
       </div>
     </div>
