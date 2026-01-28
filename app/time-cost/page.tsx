@@ -334,6 +334,7 @@ export default function TimeCost() {
     setInputs(DEFAULT_INPUTS);
     setStep(1);
     setRateMessage(null);
+    setCopied(false);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
   }, []);
 
