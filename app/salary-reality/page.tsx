@@ -44,22 +44,6 @@ const STORAGE_KEY = 'truecost.salaryReality';
 
 const DEFAULT_INPUTS: SalaryInputs = {
   payType: 'annual',
-  annualSalary: '75000',
-  hourlyRate: '35',
-  paidHoursWeek: '38',
-  contractHoursWeek: '38',
-  actualHoursWeek: '45',
-  commuteMinutesDay: '30',
-  commuteDaysWeek: '5',
-  afterHoursMinutesDay: '30',
-  afterHoursDaysWeek: '3',
-  monthlyWorkExpenses: '200',
-  childcareCostWeek: '',
-  recoveryHoursWeek: 2,
-};
-
-const EMPTY_INPUTS: SalaryInputs = {
-  payType: 'annual',
   annualSalary: '',
   hourlyRate: '',
   paidHoursWeek: '',
@@ -233,16 +217,8 @@ export default function SalaryReality() {
   const isClient = useIsClient();
   const { currency, format: formatCurrency } = useCurrency();
 
-  // Initialize state with localStorage data if available (client-side only)
-  const [inputs, setInputs] = useState<SalaryInputs>(() => {
-    const stored = loadFromStorage();
-    return stored?.inputs ?? DEFAULT_INPUTS;
-  });
-
-  const [savedAsDefault, setSavedAsDefault] = useState(() => {
-    const stored = loadFromStorage();
-    return stored?.savedAsDefault ?? false;
-  });
+  const [inputs, setInputs] = useState<SalaryInputs>(DEFAULT_INPUTS);
+  const [savedAsDefault, setSavedAsDefault] = useState(false);
 
   const [copied, setCopied] = useState(false);
 
@@ -276,7 +252,7 @@ export default function SalaryReality() {
 
   const handleReset = useCallback(() => {
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    setInputs(EMPTY_INPUTS);
+    setInputs(DEFAULT_INPUTS);
     setSavedAsDefault(false);
     setCopied(false);
   }, []);
@@ -383,7 +359,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                 label={`Annual Salary (${currency})`}
                 name="annualSalary"
                 value={inputs.annualSalary}
-                placeholder="75000"
+                placeholder="0"
                 suffix={currency}
                 onChange={handleInputChange}
               />
@@ -393,7 +369,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                   label={`Hourly Rate (${currency})`}
                   name="hourlyRate"
                   value={inputs.hourlyRate}
-                  placeholder="35"
+                  placeholder="0"
                   suffix="/hr"
                   onChange={handleInputChange}
                 />

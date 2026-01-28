@@ -41,16 +41,6 @@ interface StoredData {
 const STORAGE_KEY = 'truecost.lifeFriction';
 
 const DEFAULT_INPUTS: FrictionInputs = {
-  adminDrag: 3,
-  scheduleOverload: 4,
-  environmentFriction: 2,
-  peopleDrain: 3,
-  healthDrag: 2,
-  digitalNoise: 5,
-  dailyMinutesLost: 45,
-};
-
-const EMPTY_INPUTS: FrictionInputs = {
   adminDrag: 0,
   scheduleOverload: 0,
   environmentFriction: 0,
@@ -224,10 +214,7 @@ export default function LifeFriction() {
   const isClient = useIsClient();
 
   // Initialize state with localStorage data if available
-  const [inputs, setInputs] = useState<FrictionInputs>(() => {
-    const stored = loadFromStorage();
-    return stored ?? DEFAULT_INPUTS;
-  });
+  const [inputs, setInputs] = useState<FrictionInputs>(DEFAULT_INPUTS);
 
   // Calculate results
   const results = useMemo(() => calculateResults(inputs), [inputs]);
@@ -245,7 +232,7 @@ export default function LifeFriction() {
 
   const handleReset = useCallback(() => {
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    setInputs(EMPTY_INPUTS);
+    setInputs(DEFAULT_INPUTS);
   }, []);
 
   return (

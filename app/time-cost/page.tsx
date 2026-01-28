@@ -61,19 +61,6 @@ const SALARY_REALITY_KEY = 'truecost.salaryReality';
 
 const DEFAULT_INPUTS: TimeCostInputs = {
   commitmentName: '',
-  baseTimeValue: '1',
-  baseTimeUnit: 'hours',
-  hiddenTimeValue: '15',
-  hiddenTimeUnit: 'minutes',
-  frequency: 'weekly',
-  duration: 'ongoing',
-  energyLevel: 'medium',
-  hourlyValue: '',
-  showMoneyCost: false,
-};
-
-const EMPTY_INPUTS: TimeCostInputs = {
-  commitmentName: '',
   baseTimeValue: '',
   baseTimeUnit: 'hours',
   hiddenTimeValue: '',
@@ -315,10 +302,7 @@ export default function TimeCost() {
   const { currency, format: formatCurrency } = useCurrency();
 
   const [step, setStep] = useState<1 | 2>(1);
-  const [inputs, setInputs] = useState<TimeCostInputs>(() => {
-    const stored = loadFromStorage();
-    return stored?.inputs ?? DEFAULT_INPUTS;
-  });
+  const [inputs, setInputs] = useState<TimeCostInputs>(DEFAULT_INPUTS);
   const [copied, setCopied] = useState(false);
   const [rateMessage, setRateMessage] = useState<string | null>(null);
 
@@ -345,7 +329,7 @@ export default function TimeCost() {
 
   const handleReset = useCallback(() => {
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    setInputs(EMPTY_INPUTS);
+    setInputs(DEFAULT_INPUTS);
     setStep(1);
     setRateMessage(null);
     setCopied(false);
