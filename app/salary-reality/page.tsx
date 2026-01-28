@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useCurrency } from '../components/CurrencyProvider';
+import { CurrencySelector } from '../components/CurrencySelector';
 import DailyNote from '../components/DailyNote';
 
 // Types
@@ -293,6 +294,14 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
           {/* Inputs Panel */}
           <div className="bg-card-bg border border-card-border rounded-xl p-6">
             <h2 className="text-xl font-semibold mb-4 text-foreground">Inputs</h2>
+
+            {/* Currency */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2 text-zinc-300">
+                Currency
+              </label>
+              <CurrencySelector />
+            </div>
 
             {/* Pay Type Toggle */}
             <div className="mb-6">

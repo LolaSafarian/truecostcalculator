@@ -3,8 +3,6 @@
 import Link from 'next/link';
 import { type ReactNode } from 'react';
 import { CurrencyProvider } from './CurrencyProvider';
-import { CurrencySelector } from './CurrencySelector';
-
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/salary-reality', label: 'Salary Reality' },
@@ -33,11 +31,6 @@ export function LayoutClient({ children }: { children: ReactNode }) {
                 </Link>
               ))}
             </nav>
-            {/* Currency selector at bottom of sidebar */}
-            <div className="px-6 pt-4 border-t border-card-border">
-              <label className="block text-xs text-zinc-500 mb-1.5">Currency</label>
-              <CurrencySelector />
-            </div>
           </div>
         </aside>
 
@@ -61,7 +54,6 @@ export function LayoutClient({ children }: { children: ReactNode }) {
                 {item.label}
               </Link>
             ))}
-            <CurrencySelector />
           </div>
         </nav>
       </div>

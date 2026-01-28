@@ -229,16 +229,6 @@ export default function LifeFriction() {
     }
   }, [inputs, results, isClient]);
 
-  // Load from localStorage on mount (client-side only)
-  useEffect(() => {
-    if (isClient) {
-      const stored = loadFromStorage();
-      if (stored) {
-        setInputs(stored);
-      }
-    }
-  }, [isClient]);
-
   const handleSliderChange = useCallback((key: keyof FrictionInputs, value: number) => {
     setInputs(prev => ({ ...prev, [key]: value }));
   }, []);
