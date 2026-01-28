@@ -58,25 +58,46 @@ const DEFAULT_INPUTS: SalaryInputs = {
   recoveryHoursWeek: 2,
 };
 
+// Strip commas/spaces then parse. parseFloat("96,000") silently returns 96.
+function parseNum(val: string): number {
+  const cleaned = val.replace(/[,\s]/g, '');
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? 0 : num;
+}
+
+// Validation
+interface ValidationErrors {
+  salary?: string;
+  hours?: string;
+}
+
+function validateInputs(inputs: SalaryInputs): ValidationErrors {
+  const errors: ValidationErrors = {};
+  if (inputs.payType === 'annual') {
+    if (parseNum(inputs.annualSalary) <= 0) errors.salary = 'Annual salary must be greater than 0.';
+  } else {
+    if (parseNum(inputs.hourlyRate) <= 0) errors.salary = 'Hourly rate must be greater than 0.';
+  }
+  if (parseNum(inputs.actualHoursWeek) <= 0) errors.hours = 'Actual hours worked must be greater than 0.';
+  return errors;
+}
+
 // Pure calculation function
 function calculateResults(inputs: SalaryInputs): CalculationResults {
-  const parse = (val: string): number => {
-    const num = parseFloat(val);
-    return isNaN(num) ? 0 : num;
-  };
+  const parse = (val: string): number => parseNum(val);
 
-  const annualSalary = parse(inputs.annualSalary);
-  const hourlyRate = parse(inputs.hourlyRate);
-  const paidHoursWeek = parse(inputs.paidHoursWeek);
-  const contractHoursWeek = parse(inputs.contractHoursWeek);
-  const actualHoursWeek = parse(inputs.actualHoursWeek);
-  const commuteMinutesDay = parse(inputs.commuteMinutesDay);
-  const commuteDaysWeek = parse(inputs.commuteDaysWeek);
-  const afterHoursMinutesDay = parse(inputs.afterHoursMinutesDay);
-  const afterHoursDaysWeek = parse(inputs.afterHoursDaysWeek);
-  const monthlyWorkExpenses = parse(inputs.monthlyWorkExpenses);
-  const childcareCostWeek = parse(inputs.childcareCostWeek);
-  const recoveryHoursWeek = inputs.recoveryHoursWeek;
+  const annualSalary = Math.max(0, parse(inputs.annualSalary));
+  const hourlyRate = Math.max(0, parse(inputs.hourlyRate));
+  const paidHoursWeek = Math.max(0, parse(inputs.paidHoursWeek));
+  const contractHoursWeek = Math.max(0, parse(inputs.contractHoursWeek));
+  const actualHoursWeek = Math.max(0, parse(inputs.actualHoursWeek));
+  const commuteMinutesDay = Math.max(0, parse(inputs.commuteMinutesDay));
+  const commuteDaysWeek = Math.max(0, parse(inputs.commuteDaysWeek));
+  const afterHoursMinutesDay = Math.max(0, parse(inputs.afterHoursMinutesDay));
+  const afterHoursDaysWeek = Math.max(0, parse(inputs.afterHoursDaysWeek));
+  const monthlyWorkExpenses = Math.max(0, parse(inputs.monthlyWorkExpenses));
+  const childcareCostWeek = Math.max(0, parse(inputs.childcareCostWeek));
+  const recoveryHoursWeek = Math.max(0, inputs.recoveryHoursWeek);
 
   // Calculated values
   const commuteHoursWeek = (commuteMinutesDay * commuteDaysWeek) / 60;
@@ -168,6 +189,7 @@ function NumberInput({
           type="number"
           name={name}
           value={value}
+          min="0"
           onChange={onChange}
           placeholder={placeholder ?? '0'}
           className="w-full px-3 py-2 bg-background border border-card-border rounded-lg text-foreground placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -208,6 +230,10 @@ export default function SalaryReality() {
 
   const [copied, setCopied] = useState(false);
 
+  // Validation
+  const errors = useMemo(() => validateInputs(inputs), [inputs]);
+  const isValid = Object.keys(errors).length === 0;
+
   // Calculate results using useMemo
   const results = useMemo(() => calculateResults(inputs), [inputs]);
 
@@ -235,6 +261,7 @@ export default function SalaryReality() {
   const handleReset = useCallback(() => {
     setInputs(DEFAULT_INPUTS);
     setSavedAsDefault(false);
+    setCopied(false);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
   }, []);
 
@@ -476,8 +503,16 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
               </div>
             </div>
 
+            {/* Validation Errors */}
+            {!isValid && (
+              <div className="border-t border-card-border pt-3 mt-4 space-y-1">
+                {errors.salary && <p className="text-sm text-red-400">{errors.salary}</p>}
+                {errors.hours && <p className="text-sm text-red-400">{errors.hours}</p>}
+              </div>
+            )}
+
             {/* Actions */}
-            <div className="border-t border-card-border pt-4 mt-4 flex flex-wrap items-center gap-3">
+            <div className={`${isValid ? 'border-t border-card-border' : ''} pt-4 mt-4 flex flex-wrap items-center gap-3`}>
               <button
                 type="button"
                 onClick={handleReset}
@@ -501,6 +536,9 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
           <div className="bg-card-bg border border-card-border rounded-xl p-6">
             <h2 className="text-xl font-semibold mb-6 text-foreground">Results</h2>
 
+            {!isValid ? (
+              <p className="text-zinc-500">Enter a valid salary and hours to see results.</p>
+            ) : (<>
             {/* Big Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div className="p-4 rounded-lg bg-background border border-card-border">
@@ -608,6 +646,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
             </div>
 
             <DailyNote calculatorId={1} />
+            </>)}
           </div>
         </div>
       </div>
