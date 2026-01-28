@@ -72,6 +72,19 @@ const DEFAULT_INPUTS: TimeCostInputs = {
   showMoneyCost: false,
 };
 
+const EMPTY_INPUTS: TimeCostInputs = {
+  commitmentName: '',
+  baseTimeValue: '',
+  baseTimeUnit: 'hours',
+  hiddenTimeValue: '',
+  hiddenTimeUnit: 'minutes',
+  frequency: 'weekly',
+  duration: 'ongoing',
+  energyLevel: 'medium',
+  hourlyValue: '',
+  showMoneyCost: false,
+};
+
 const FREQUENCY_OPTIONS: { value: Frequency; label: string }[] = [
   { value: 'once', label: 'Once' },
   { value: 'weekly', label: 'Weekly' },
@@ -331,11 +344,11 @@ export default function TimeCost() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setInputs(DEFAULT_INPUTS);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    setInputs(EMPTY_INPUTS);
     setStep(1);
     setRateMessage(null);
     setCopied(false);
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
   }, []);
 
   const handleUseTrueRate = useCallback(() => {

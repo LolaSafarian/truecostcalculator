@@ -50,6 +50,16 @@ const DEFAULT_INPUTS: FrictionInputs = {
   dailyMinutesLost: 45,
 };
 
+const EMPTY_INPUTS: FrictionInputs = {
+  adminDrag: 0,
+  scheduleOverload: 0,
+  environmentFriction: 0,
+  peopleDrain: 0,
+  healthDrag: 0,
+  digitalNoise: 0,
+  dailyMinutesLost: 0,
+};
+
 const FRICTION_CATEGORIES: {
   key: CategoryKey;
   label: string;
@@ -234,8 +244,8 @@ export default function LifeFriction() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setInputs(DEFAULT_INPUTS);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    setInputs(EMPTY_INPUTS);
   }, []);
 
   return (

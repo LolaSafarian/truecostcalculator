@@ -58,6 +58,22 @@ const DEFAULT_INPUTS: SalaryInputs = {
   recoveryHoursWeek: 2,
 };
 
+const EMPTY_INPUTS: SalaryInputs = {
+  payType: 'annual',
+  annualSalary: '',
+  hourlyRate: '',
+  paidHoursWeek: '',
+  contractHoursWeek: '',
+  actualHoursWeek: '',
+  commuteMinutesDay: '',
+  commuteDaysWeek: '',
+  afterHoursMinutesDay: '',
+  afterHoursDaysWeek: '',
+  monthlyWorkExpenses: '',
+  childcareCostWeek: '',
+  recoveryHoursWeek: 0,
+};
+
 // Strip commas/spaces then parse. parseFloat("96,000") silently returns 96.
 function parseNum(val: string): number {
   const cleaned = val.replace(/[,\s]/g, '');
@@ -259,10 +275,10 @@ export default function SalaryReality() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setInputs(DEFAULT_INPUTS);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    setInputs(EMPTY_INPUTS);
     setSavedAsDefault(false);
     setCopied(false);
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
   }, []);
 
   const handleSaveAsDefaultToggle = useCallback(() => {
