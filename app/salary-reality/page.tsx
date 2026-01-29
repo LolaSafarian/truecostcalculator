@@ -168,14 +168,12 @@ function NumberInput({
   label,
   name,
   value,
-  placeholder,
   suffix,
   onChange,
 }: {
   label: string;
   name: string;
   value: string;
-  placeholder?: string;
   suffix?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
@@ -191,7 +189,8 @@ function NumberInput({
           value={value}
           min="0"
           onChange={onChange}
-          placeholder={placeholder ?? '0'}
+          placeholder=""
+          autoComplete="off"
           className="w-full px-3 py-2 bg-background border border-card-border rounded-lg text-foreground placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
         {suffix && (
@@ -359,7 +358,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                 label={`Annual Salary (${currency})`}
                 name="annualSalary"
                 value={inputs.annualSalary}
-                placeholder="0"
+
                 suffix={currency}
                 onChange={handleInputChange}
               />
@@ -369,7 +368,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                   label={`Hourly Rate (${currency})`}
                   name="hourlyRate"
                   value={inputs.hourlyRate}
-                  placeholder="0"
+  
                   suffix="/hr"
                   onChange={handleInputChange}
                 />
@@ -377,7 +376,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                   label="Paid Hours per Week"
                   name="paidHoursWeek"
                   value={inputs.paidHoursWeek}
-                  placeholder="38"
+  
                   suffix="hrs"
                   onChange={handleInputChange}
                 />
@@ -391,7 +390,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                 label="Contract Hours per Week"
                 name="contractHoursWeek"
                 value={inputs.contractHoursWeek}
-                placeholder="38"
+
                 suffix="hrs"
                 onChange={handleInputChange}
               />
@@ -399,7 +398,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                 label="Actual Hours Worked per Week"
                 name="actualHoursWeek"
                 value={inputs.actualHoursWeek}
-                placeholder="45"
+
                 suffix="hrs"
                 onChange={handleInputChange}
               />
@@ -413,7 +412,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                   label="Minutes per Day"
                   name="commuteMinutesDay"
                   value={inputs.commuteMinutesDay}
-                  placeholder="30"
+  
                   suffix="min"
                   onChange={handleInputChange}
                 />
@@ -421,7 +420,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                   label="Days per Week"
                   name="commuteDaysWeek"
                   value={inputs.commuteDaysWeek}
-                  placeholder="5"
+  
                   suffix="days"
                   onChange={handleInputChange}
                 />
@@ -436,7 +435,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                   label="Minutes per Day"
                   name="afterHoursMinutesDay"
                   value={inputs.afterHoursMinutesDay}
-                  placeholder="30"
+  
                   suffix="min"
                   onChange={handleInputChange}
                 />
@@ -444,7 +443,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                   label="Days per Week"
                   name="afterHoursDaysWeek"
                   value={inputs.afterHoursDaysWeek}
-                  placeholder="3"
+  
                   suffix="days"
                   onChange={handleInputChange}
                 />
@@ -458,7 +457,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                 label={`Monthly Work Expenses (${currency})`}
                 name="monthlyWorkExpenses"
                 value={inputs.monthlyWorkExpenses}
-                placeholder="200"
+
                 suffix={currency}
                 onChange={handleInputChange}
               />
@@ -466,7 +465,7 @@ On paper: ${formatCurrency(results.onPaperHourly)}/hr. In reality: ${formatCurre
                 label={`Childcare Cost per Week (${currency}, optional)`}
                 name="childcareCostWeek"
                 value={inputs.childcareCostWeek}
-                placeholder="0"
+
                 suffix={currency}
                 onChange={handleInputChange}
               />

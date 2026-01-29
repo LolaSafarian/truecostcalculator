@@ -445,7 +445,8 @@ export default function TimeCost() {
                 name="commitmentName"
                 value={inputs.commitmentName}
                 onChange={handleInputChange}
-                placeholder="e.g. Weekly team meeting"
+                placeholder=""
+                autoComplete="off"
                 className="w-full px-3 py-2.5 bg-background border border-card-border rounded-lg text-foreground placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors"
               />
             </div>
@@ -461,7 +462,8 @@ export default function TimeCost() {
                   name="baseTimeValue"
                   value={inputs.baseTimeValue}
                   onChange={handleInputChange}
-                  placeholder="1"
+                  placeholder=""
+                  autoComplete="off"
                   className="flex-1 px-3 py-2.5 bg-background border border-card-border rounded-lg text-foreground placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <select
@@ -489,7 +491,8 @@ export default function TimeCost() {
                   name="hiddenTimeValue"
                   value={inputs.hiddenTimeValue}
                   onChange={handleInputChange}
-                  placeholder="15"
+                  placeholder=""
+                  autoComplete="off"
                   className="flex-1 px-3 py-2.5 bg-background border border-card-border rounded-lg text-foreground placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <select
@@ -592,7 +595,8 @@ export default function TimeCost() {
                   name="hourlyValue"
                   value={inputs.hourlyValue}
                   onChange={handleInputChange}
-                  placeholder="0"
+                  placeholder=""
+                  autoComplete="off"
                   className="w-full px-3 py-2.5 bg-background border border-card-border rounded-lg text-foreground placeholder-zinc-600 focus:outline-none focus:border-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">/hr</span>
